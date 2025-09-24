@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:rental_app/config.dart';
 import 'package:rental_app/src/presenter/pages/movies_tab.dart';
+import 'package:rental_app/src/presenter/stores/user_store.dart';
 import 'package:rental_app/src/utils/hex_color_helper.dart';
 
 class MoviesPage extends StatefulWidget {
@@ -19,6 +21,7 @@ class _MoviesPageState extends State<MoviesPage> {
       child: Scaffold(
         backgroundColor: HexColorHelper.fromHex(secondaryColor),
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Row(
             spacing: 10,
             children: [
@@ -28,9 +31,22 @@ class _MoviesPageState extends State<MoviesPage> {
                 width: 30,
                 colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
-              Text("João"),
+              Text(
+                context.watch<UserStore>().user.username,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             ],
           ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                context.read<UserStore>().logout();
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.logout),
+              color: HexColorHelper.fromHex(borderColor),
+            ),
+          ],
           bottom: TabBar(
             labelStyle: TextStyle(color: HexColorHelper.fromHex(textColor)),
             unselectedLabelStyle: TextStyle(
@@ -43,7 +59,7 @@ class _MoviesPageState extends State<MoviesPage> {
           ),
           backgroundColor: HexColorHelper.fromHex(tertiaryColor),
         ),
-        body: TabBarView(children: [MoviesTab(), MoviesTab()]),
+        body: TabBarView(children: [MoviesTab(true), MoviesTab(false)]),
       ),
     );
   }

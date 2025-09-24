@@ -1,15 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rental_app/config.dart';
+import 'package:rental_app/src/external/protos/packages.pb.dart';
+import 'package:rental_app/src/presenter/stores/movies_store.dart';
+import 'package:rental_app/src/presenter/stores/user_store.dart';
 import 'package:rental_app/src/utils/hex_color_helper.dart';
 
 class MoviesTab extends StatefulWidget {
-  const MoviesTab({super.key});
+  final bool available;
+  const MoviesTab(this.available, {super.key});
 
   @override
   State<MoviesTab> createState() => _MoviesTabState();
 }
 
 class _MoviesTabState extends State<MoviesTab> {
+  final _available = true;
+  var _user = User();
+  var _movies = Movies();
+
+  @override
+  void initState() {
+    _user = context.read<UserStore>().user;
+    if (_available) {
+      context.read<MoviesStore>().availableMovies();
+      _movies = context.read<MoviesStore>().available_movies;
+    } else {
+      context.read<MoviesStore>().moviesRentalByUser(_user);
+      _movies = context.read<MoviesStore>().available_movies;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -44,12 +66,7 @@ class _MoviesTabState extends State<MoviesTab> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  Text(
-                    "Preço",
-                    style: TextStyle(
-                      fontSize: 26,
-                    ),
-                  ),
+                  Text("Preço", style: TextStyle(fontSize: 26)),
                 ],
               ),
             ),

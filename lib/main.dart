@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rental_app/config.dart';
-import 'package:rental_app/src/presenter/pages/movie_details_page.dart';
-import 'package:rental_app/src/presenter/pages/movies_page.dart';
 import 'package:rental_app/src/presenter/pages/login_page.dart';
+import 'package:rental_app/src/presenter/stores/movies_store.dart';
+import 'package:rental_app/src/presenter/stores/user_store.dart';
 import 'package:rental_app/src/utils/hex_color_helper.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserStore()),
+        ChangeNotifierProvider(create: (context) => MoviesStore()),
+      ],
+      child: MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

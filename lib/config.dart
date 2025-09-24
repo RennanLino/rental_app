@@ -1,4 +1,4 @@
-const String baseUrl = "";
+const String baseUrl = "http://127.0.0.1:8000";
 
 const String primaryColor = "#682875";
 const String secondaryColor = "#280032";
