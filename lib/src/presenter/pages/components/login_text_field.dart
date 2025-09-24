@@ -27,10 +27,7 @@ class _LoginTextField extends State<LoginTextField> {
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
-        label: Text(
-          _label,
-          style: TextStyle(color: HexColorHelper.fromHex(textColor)),
-        ),
+        label: Text(_label, style: Theme.of(context).textTheme.bodyMedium),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: HexColorHelper.fromHex(borderColor),

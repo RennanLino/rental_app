@@ -36,7 +36,7 @@ class MainApp extends StatelessWidget {
           ),
         ),
       ),
-      home: MovieDetailsPage(),
+      home: LoginPage(),
     );
   }
 }

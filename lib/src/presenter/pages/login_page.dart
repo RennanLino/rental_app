@@ -33,59 +33,51 @@ class _LoginPageState extends State<LoginPage> {
             child: Opacity(
               opacity: 0.85,
               child: Container(
+                padding: EdgeInsets.all(20),
                 alignment: Alignment.center,
                 constraints: const BoxConstraints(
-                  maxWidth: 400,
-                  maxHeight: 350,
+                  maxHeight: 500,
+                  maxWidth: 550,
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [BoxShadow(color: Colors.black, blurRadius: 5.0)],
                   color: HexColorHelper.fromHex(primaryColor),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Entrar",
-                            style: TextStyle(
-                              color: HexColorHelper.fromHex(textColor),
-                              fontSize: 30,
-                            ),
-                          ),
-                        ],
-                      ),
-                      LoginTextField("Username", _username),
-                      LoginTextField("Password", _password),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          InkWell(
-                            child: Text(
-                              "Esqueceu a senha ?",
-                              style: TextStyle(
-                                color: HexColorHelper.fromHex(textColor),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(200, 45),
-                          backgroundColor: Colors.white,
-                          foregroundColor: HexColorHelper.fromHex(primaryColor),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Entrar",
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                        child: Text("Entrar"),
+                      ],
+                    ),
+                    LoginTextField("Username", _username),
+                    LoginTextField("Password", _password),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        InkWell(
+                          child: Text(
+                            "Esqueceu a senha ?",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(200, 45),
+                        backgroundColor: Colors.white,
+                        foregroundColor: HexColorHelper.fromHex(primaryColor),
                       ),
-                    ],
-                  ),
+                      child: Text("Entrar", style: TextStyle(fontSize: 16)),
+                    ),
+                  ],
                 ),
               ),
             ),
