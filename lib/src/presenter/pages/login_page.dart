@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_app/config.dart';
-import 'package:rental_app/src/external/protos/packages.pb.dart';
 import 'package:rental_app/src/presenter/pages/components/login_text_field.dart';
 import 'package:rental_app/src/presenter/pages/movies_page.dart';
 import 'package:rental_app/src/presenter/stores/user_store.dart';

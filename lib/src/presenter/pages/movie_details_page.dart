@@ -1,9 +1,6 @@
-import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:rental_app/config.dart';
-import 'package:rental_app/src/presenter/pages/movies_tab.dart';
 import 'package:rental_app/src/utils/hex_color_helper.dart';
 
 class MovieDetailsPage extends StatefulWidget {
@@ -67,7 +64,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
 
                 Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: Container(
+                  child: SizedBox(
                     width: MediaQuery.sizeOf(context).width - 400,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

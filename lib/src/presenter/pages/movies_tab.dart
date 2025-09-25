@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_app/config.dart';
 import 'package:rental_app/src/external/protos/packages.pb.dart';
@@ -15,19 +16,20 @@ class MoviesTab extends StatefulWidget {
 }
 
 class _MoviesTabState extends State<MoviesTab> {
-  final _available = true;
+  var _available = true;
   var _user = User();
   var _movies = Movies();
 
   @override
   void initState() {
+    _available = widget.available;
     _user = context.read<UserStore>().user;
     if (_available) {
       context.read<MoviesStore>().availableMovies();
       _movies = context.read<MoviesStore>().available_movies;
     } else {
       context.read<MoviesStore>().moviesRentalByUser(_user);
-      _movies = context.read<MoviesStore>().available_movies;
+      _movies = context.read<MoviesStore>().rented_movies;
     }
     super.initState();
   }
@@ -42,7 +44,7 @@ class _MoviesTabState extends State<MoviesTab> {
         crossAxisSpacing: 50.0,
         mainAxisSpacing: 50.0,
       ),
-      itemCount: 100,
+      itemCount: _movies.movies.length,
       itemBuilder: (BuildContext context, int index) {
         return Card(
           color: HexColorHelper.fromHex(secondaryColor),
@@ -61,12 +63,14 @@ class _MoviesTabState extends State<MoviesTab> {
                 children: [
                   SizedBox(
                     width: 200,
-                    child: Image(
-                      image: AssetImage("assets/images/image.png"),
-                      fit: BoxFit.cover,
+                    child: Image.memory(
+                      Uint8List.fromList(_movies.movies[index].cover),
                     ),
                   ),
-                  Text("Preço", style: TextStyle(fontSize: 26)),
+                  Text(
+                    "R\$ ${_movies.movies[index].value.toStringAsFixed(2)}",
+                    style: TextStyle(fontSize: 26),
+                  ),
                 ],
               ),
             ),
