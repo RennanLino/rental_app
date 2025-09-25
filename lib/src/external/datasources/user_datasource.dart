@@ -7,13 +7,17 @@ import 'package:rental_app/src/external/protos/packages.pb.dart';
 class UserDatasource {
   final client = http.Client();
 
-  Future<bool> login(User user) async {
+  Future<User> login(User user) async {
     Uri uri = Uri.parse("$baseUrl/login");
     Uint8List content = UserAdapter.encodeProto(user);
 
     try {
       final response = await client.post(uri, body: content);
-      return response.statusCode == 200;
+      if (response.statusCode == 200) {
+        return UserAdapter.decodeProto(response.bodyBytes);
+      } else {
+        throw Exception('Server can\'t process the request');
+      }
     } catch (e) {
       throw Exception('Can\'t connect with the server');
     }

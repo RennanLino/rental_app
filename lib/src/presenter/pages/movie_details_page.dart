@@ -1,16 +1,34 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:rental_app/config.dart';
+import 'package:rental_app/src/external/protos/packages.pb.dart';
+import 'package:rental_app/src/presenter/stores/rental_store.dart';
+import 'package:rental_app/src/presenter/stores/user_store.dart';
 import 'package:rental_app/src/utils/hex_color_helper.dart';
 
 class MovieDetailsPage extends StatefulWidget {
-  const MovieDetailsPage({super.key});
+  final bool available;
+  final Movie movie;
+  const MovieDetailsPage(this.available, this.movie, {super.key});
 
   @override
   State<MovieDetailsPage> createState() => _MovieDetailsPageState();
 }
 
 class _MovieDetailsPageState extends State<MovieDetailsPage> {
+  var _available = true;
+  var _movie = Movie();
+  var _user = User();
+
+  @override
+  void initState() {
+    _user = context.read<UserStore>().user;
+    _available = widget.available;
+    _movie = widget.movie;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +56,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
             child: Row(
               children: [
                 Container(
-                  width: 300,
+                  width: 400,
                   padding: EdgeInsets.all(40),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -49,13 +67,11 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                             color: HexColorHelper.fromHex(borderColor),
                           ),
                         ),
-                        child: Image(
-                          image: AssetImage("assets/images/image.png"),
-                        ),
+                        child: Image.memory(Uint8List.fromList(_movie.cover)),
                       ),
 
                       Text(
-                        "Preço",
+                        "R\$ ${_movie.value.toStringAsFixed(2)}",
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
@@ -65,20 +81,20 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: SizedBox(
-                    width: MediaQuery.sizeOf(context).width - 400,
+                    width: MediaQuery.sizeOf(context).width - 500,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
                           children: [
                             Text(
-                              "Nome Filme",
+                              _movie.title,
                               style: Theme.of(context).textTheme.headlineLarge,
                             ),
 
                             SizedBox(
                               child: Text(
-                                "Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
+                                _movie.sinopse,
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ),
@@ -99,7 +115,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                                       ).textTheme.bodyMedium,
                                     ),
                                     Text(
-                                      "2020",
+                                      _movie.year,
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodySmall,
@@ -115,7 +131,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                                       ).textTheme.bodyMedium,
                                     ),
                                     Text(
-                                      "Someone",
+                                      _movie.director,
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodySmall,
@@ -130,12 +146,27 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                               spacing: 30,
                               children: [
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
                                   child: Text("Cancel"),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
-                                  child: Text("Rent"),
+                                  onPressed: () {
+                                    if (_available) {
+                                      context.read<RentalStore>().rentalMovie(
+                                        _user.id,
+                                        _movie.id,
+                                      );
+                                    } else {
+                                      context.read<RentalStore>().watchMovie(
+                                        _user.id,
+                                        _movie.id,
+                                      );
+                                    }
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(_available ? "Rent" : "Watch"),
                                 ),
                               ],
                             ),

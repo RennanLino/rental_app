@@ -14,8 +14,9 @@ class UserStore extends ChangeNotifier {
     User user = User(username: username, password: password);
     bool success = false;
     try {
-      success = await userDatasource.login(user);
-      _user = user;
+      final loggedUser = await userDatasource.login(user);
+      _user = loggedUser;
+      success = true;
     } catch (e) {
       errorMessage = e.toString();
     }

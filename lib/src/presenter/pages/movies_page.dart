@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_app/config.dart';
+import 'package:rental_app/src/external/protos/packages.pb.dart';
 import 'package:rental_app/src/presenter/pages/movies_tab.dart';
+import 'package:rental_app/src/presenter/stores/movies_store.dart';
 import 'package:rental_app/src/presenter/stores/user_store.dart';
 import 'package:rental_app/src/utils/hex_color_helper.dart';
 
@@ -14,6 +16,16 @@ class MoviesPage extends StatefulWidget {
 }
 
 class _MoviesPageState extends State<MoviesPage> {
+  var _user = User();
+
+  @override
+  void initState() {
+    _user = context.read<UserStore>().user;
+    context.read<MoviesStore>().getAvailableMovies();
+    context.read<MoviesStore>().getMoviesRentalByUser(_user);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -59,7 +71,12 @@ class _MoviesPageState extends State<MoviesPage> {
           ),
           backgroundColor: HexColorHelper.fromHex(tertiaryColor),
         ),
-        body: TabBarView(children: [MoviesTab(true), MoviesTab(false)]),
+        body: TabBarView(
+          children: [
+            MoviesTab(true, context.watch<MoviesStore>().availableMovies),
+            MoviesTab(false, context.watch<MoviesStore>().rentedMovies),
+          ],
+        ),
       ),
     );
   }

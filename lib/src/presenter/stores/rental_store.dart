@@ -3,7 +3,7 @@ import 'package:rental_app/src/external/datasources/rental_datasource.dart';
 import 'package:rental_app/src/external/protos/packages.pb.dart';
 
 class RentalStore extends ChangeNotifier {
-  final rentalDatasource = RentalDatasource();
+  final _rentalDatasource = RentalDatasource();
 
   var _rental = Rental();
   Rental get rental => _rental;
@@ -14,7 +14,7 @@ class RentalStore extends ChangeNotifier {
     Rental rental = Rental(userId: userId, movieId: movieId);
     bool success = false;
     try {
-      success = await rentalDatasource.rentalMovie(rental);
+      success = await _rentalDatasource.rentalMovie(rental);
       _rental = rental;
     } catch (e) {
       errorMessage = e.toString();
@@ -27,7 +27,7 @@ class RentalStore extends ChangeNotifier {
     Rental rental = Rental(userId: userId, movieId: movieId);
     bool success = false;
     try {
-      success = await rentalDatasource.watchMovie(rental);
+      success = await _rentalDatasource.watchMovie(rental);
       _rental = rental;
     } catch (e) {
       errorMessage = e.toString();

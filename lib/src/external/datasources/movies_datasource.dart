@@ -8,7 +8,7 @@ import 'package:rental_app/src/external/protos/packages.pb.dart';
 class MoviesDatasource {
   final client = http.Client();
 
-  Future<Movies> availableMovies() async {
+  Future<List<Movie>> getAvailableMovies() async {
     Uri uri = Uri.parse("$baseUrl/available-movies");
 
     try {
@@ -23,7 +23,7 @@ class MoviesDatasource {
     }
   }
 
-  Future<Movies> moviesRentalByUser(User user) async {
+  Future<List<Movie>> getMoviesRentalByUser(User user) async {
     Uri uri = Uri.parse("$baseUrl/movies-rental-by-user");
     Uint8List content = UserAdapter.encodeProto(user);
 

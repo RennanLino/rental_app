@@ -3,13 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rental_app/config.dart';
 import 'package:rental_app/src/external/protos/packages.pb.dart';
+import 'package:rental_app/src/presenter/pages/movie_details_page.dart';
 import 'package:rental_app/src/presenter/stores/movies_store.dart';
 import 'package:rental_app/src/presenter/stores/user_store.dart';
 import 'package:rental_app/src/utils/hex_color_helper.dart';
 
 class MoviesTab extends StatefulWidget {
   final bool available;
-  const MoviesTab(this.available, {super.key});
+  final List<Movie> movies;
+  const MoviesTab(this.available, this.movies, {super.key});
 
   @override
   State<MoviesTab> createState() => _MoviesTabState();
@@ -18,19 +20,13 @@ class MoviesTab extends StatefulWidget {
 class _MoviesTabState extends State<MoviesTab> {
   var _available = true;
   var _user = User();
-  var _movies = Movies();
+  List<Movie> _movies = [];
 
   @override
   void initState() {
     _available = widget.available;
+    _movies = widget.movies;
     _user = context.read<UserStore>().user;
-    if (_available) {
-      context.read<MoviesStore>().availableMovies();
-      _movies = context.read<MoviesStore>().available_movies;
-    } else {
-      context.read<MoviesStore>().moviesRentalByUser(_user);
-      _movies = context.read<MoviesStore>().rented_movies;
-    }
     super.initState();
   }
 
@@ -44,7 +40,7 @@ class _MoviesTabState extends State<MoviesTab> {
         crossAxisSpacing: 50.0,
         mainAxisSpacing: 50.0,
       ),
-      itemCount: _movies.movies.length,
+      itemCount: _movies.length,
       itemBuilder: (BuildContext context, int index) {
         return Card(
           color: HexColorHelper.fromHex(secondaryColor),
@@ -56,7 +52,17 @@ class _MoviesTabState extends State<MoviesTab> {
             ),
           ),
           child: InkWell(
-            onTap: () => {}, //GetOne
+            onTap: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      MovieDetailsPage(_available, _movies[index]),
+                ),
+              ).then((value) {
+                context.read<MoviesStore>().getMoviesRentalByUser(_user);
+              }),
+            },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50.0),
               child: Column(
@@ -64,11 +70,11 @@ class _MoviesTabState extends State<MoviesTab> {
                   SizedBox(
                     width: 200,
                     child: Image.memory(
-                      Uint8List.fromList(_movies.movies[index].cover),
+                      Uint8List.fromList(_movies[index].cover),
                     ),
                   ),
                   Text(
-                    "R\$ ${_movies.movies[index].value.toStringAsFixed(2)}",
+                    "R\$ ${_movies[index].value.toStringAsFixed(2)}",
                     style: TextStyle(fontSize: 26),
                   ),
                 ],

@@ -3,30 +3,30 @@ import 'package:rental_app/src/external/datasources/movies_datasource.dart';
 import 'package:rental_app/src/external/protos/packages.pb.dart';
 
 class MoviesStore extends ChangeNotifier {
-  final moviesDatasource = MoviesDatasource();
+  final _moviesDatasource = MoviesDatasource();
 
-  var _available_movies = Movies();
-  Movies get available_movies => _available_movies;
+  List<Movie> _availableMovies = [];
+  List<Movie> get availableMovies => _availableMovies;
 
-  var _rented_movies = Movies();
-  Movies get rented_movies => _rented_movies;
+  List<Movie> _rentedMovies = [];
+  List<Movie> get rentedMovies => _rentedMovies;
 
   String errorMessage = "";
 
-  Future<void> availableMovies() async {
+  Future<void> getAvailableMovies() async {
     try {
-      Movies movies = await moviesDatasource.availableMovies();
-      _available_movies = movies;
+      List<Movie> movies = await _moviesDatasource.getAvailableMovies();
+      _availableMovies = movies;
     } catch (e) {
       errorMessage = e.toString();
     }
     notifyListeners();
   }
 
-  Future<void> moviesRentalByUser(User user) async {
+  Future<void> getMoviesRentalByUser(User user) async {
     try {
-      Movies movies = await moviesDatasource.moviesRentalByUser(user);
-      _rented_movies = movies;
+      List<Movie> movies = await _moviesDatasource.getMoviesRentalByUser(user);
+      _rentedMovies = movies;
     } catch (e) {
       errorMessage = e.toString();
     }

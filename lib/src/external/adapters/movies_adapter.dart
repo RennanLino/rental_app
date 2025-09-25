@@ -2,10 +2,10 @@ import 'package:flutter/services.dart';
 import 'package:rental_app/src/external/protos/packages.pb.dart';
 
 class MoviesAdapter {
-  static Movies decodeProto(Uint8List encodedMovie) {
+  static List<Movie> decodeProto(Uint8List encodedMovie) {
     try {
       final movies = Movies.fromBuffer(encodedMovie);
-      return movies;
+      return movies.movies;
     } catch (e) {
       throw Exception("Error decoding proto");
     }
